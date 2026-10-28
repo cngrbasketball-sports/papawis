@@ -1,0 +1,1922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Congre Basketball Olympics Season 2 - Live Stat Sheet</title>
+    <style>
+        :root {
+            --primary-bg: #0b1120;
+            --card-bg: #1e293b;
+            --accent-gold: #f59e0b;
+            --accent-blue: #3b82f6;
+            --border-color: #334155;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --danger-red: #ef4444;
+            --success-green: #22c55e;
+            --table-even: #172033;
+            --header-bg: #0f172a;
+        }
+
+        body.day-mode {
+            --primary-bg: #f1f5f9;
+            --card-bg: #ffffff;
+            --accent-gold: #d97706;
+            --accent-blue: #2563eb;
+            --border-color: #cbd5e1;
+            --text-light: #0f172a;
+            --text-muted: #64748b;
+            --danger-red: #dc2626;
+            --success-green: #16a34a;
+            --table-even: #f8fafc;
+            --header-bg: #e2e8f0;
+        }
+
+        @keyframes yellowFlash {
+            0% { background-color: #f59e0b; color: #000; }
+            100% { background-color: inherit; color: inherit; }
+        }
+
+        .flashing {
+            animation: yellowFlash 0.8s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-light);
+            padding: 8px;
+            font-size: 13px;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* RESPONSIVE HEADER */
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, var(--header-bg), var(--card-bg));
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 2px solid var(--accent-gold);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .header-title-container {
+            text-align: center;
+            flex-grow: 1;
+            padding: 0 5px;
+        }
+
+        .header-title-container h1 {
+            color: var(--accent-gold);
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .header-title-container p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 1px;
+        }
+
+        .theme-toggle-btn {
+            background: var(--card-bg);
+            color: var(--accent-gold);
+            border: 1.5px solid var(--accent-gold);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.82rem;
+            white-space: nowrap;
+        }
+
+        .theme-toggle-btn:active {
+            opacity: 0.8;
+        }
+
+        /* LIVE QUARTER SCOREBOARD BOX */
+        .live-scoreboard-box {
+            background: linear-gradient(135deg, var(--card-bg), var(--header-bg));
+            border: 1.5px solid var(--accent-gold);
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .team-score-summary {
+            text-align: center;
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .team-score-summary h3 {
+            color: var(--accent-gold);
+            font-size: 0.98rem;
+            margin-bottom: 2px;
+        }
+
+        .quarter-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+            flex-wrap: wrap;
+        }
+
+        .quarter-breakdown span {
+            background: var(--header-bg);
+            padding: 1px 4px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        .running-total-score {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--success-green);
+        }
+
+        /* HOTKEY INSTRUCTION BANNER */
+        .hotkey-banner {
+            background: var(--header-bg);
+            border: 1.5px solid var(--accent-blue);
+            padding: 6px 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 0.8rem;
+        }
+
+        /* NAVIGATION TABS */
+        .nav-tabs {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 6px;
+            background: var(--header-bg);
+            padding: 6px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 10px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .nav-tabs::-webkit-scrollbar {
+            height: 4px;
+        }
+        .nav-tabs::-webkit-scrollbar-thumb {
+            background: var(--accent-gold);
+            border-radius: 4px;
+        }
+
+        .nav-btn {
+            background: var(--card-bg);
+            color: var(--text-light);
+            border: 1px solid var(--border-color);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover, .nav-btn:active {
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+        }
+
+        .nav-btn.active {
+            background: var(--accent-gold);
+            color: #000;
+            border-color: var(--accent-gold);
+        }
+
+        .nav-btn.matchup-btn {
+            background: var(--accent-blue);
+            color: #fff;
+            border-color: var(--accent-blue);
+        }
+
+        .nav-btn.matchup-btn.active {
+            background: #2563eb;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+        }
+
+        /* VIEWS */
+        .view-panel {
+            display: none;
+        }
+
+        .view-panel.active {
+            display: block;
+        }
+
+        /* SETUP TEAM PANEL */
+        .setup-container {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 12px;
+        }
+
+        .setup-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .setup-row label {
+            color: var(--accent-gold);
+            font-weight: bold;
+            min-width: 140px;
+        }
+
+        .setup-row input, .setup-row select {
+            background: var(--header-bg);
+            color: var(--text-light);
+            border: 1.5px solid var(--border-color);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            flex: 1;
+            min-width: 180px;
+        }
+
+        /* MATCHUP CONTROLS */
+        .matchup-selector-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--header-bg);
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .team-select-box {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .team-select-box select {
+            width: 100%;
+            background: var(--card-bg);
+            color: var(--text-light);
+            padding: 5px 8px;
+            border: 1.5px solid var(--accent-gold);
+            border-radius: 6px;
+            font-size: 0.88rem;
+            font-weight: bold;
+        }
+
+        .versus-badge {
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: var(--accent-gold);
+            padding: 2px 10px;
+            background: var(--card-bg);
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            margin: 0 auto;
+        }
+
+        /* QUARTER FILTER SWITCH */
+        .quarter-filter-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+            background: var(--header-bg);
+            padding: 6px 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .quarter-filters-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            overflow-x: auto;
+        }
+
+        .q-btn {
+            background: var(--card-bg);
+            color: var(--text-light);
+            border: 1px solid var(--border-color);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .q-btn.active {
+            background: var(--accent-gold);
+            color: #000;
+            border-color: var(--accent-gold);
+        }
+
+        /* SIDE-BY-SIDE MATCHUP GRID */
+        .matchup-grid-sidebyside {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            align-items: start;
+        }
+
+        .matchup-grid-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* CARDS & TABLES */
+        .team-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            min-width: 0;
+        }
+
+        .team-header-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--header-bg);
+            padding: 6px 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border-left: 4px solid var(--accent-gold);
+        }
+
+        .team-header-banner h2 {
+            font-size: 1.05rem;
+            color: var(--accent-gold);
+            letter-spacing: 0.5px;
+        }
+
+        .team-score-badge {
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: var(--success-green);
+            background: var(--card-bg);
+            padding: 2px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table.stat-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+            text-align: center;
+            table-layout: auto;
+        }
+
+        table.stat-table th, table.stat-table td {
+            border: 1px solid var(--border-color);
+            padding: 3px 2px;
+        }
+
+        table.stat-table th {
+            background-color: var(--header-bg);
+            color: var(--accent-gold);
+            font-weight: bold;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+
+        table.stat-table tr:nth-child(even) {
+            background-color: var(--table-even);
+        }
+
+        .player-row-bench {
+            opacity: 0.4;
+            background-color: var(--header-bg) !important;
+        }
+        
+        .player-row-bench .stepper-unit, 
+        .player-row-bench input[type="radio"] {
+            pointer-events: none;
+        }
+
+        .player-col {
+            text-align: left !important;
+            padding-left: 4px !important;
+            white-space: nowrap;
+            font-weight: 700;
+            font-size: 0.82rem;
+            position: sticky;
+            left: 0;
+            background: var(--card-bg);
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        table.stat-table tr:nth-child(even) .player-col {
+            background: var(--table-even);
+        }
+
+        .player-col input[type="radio"] {
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+            accent-color: var(--accent-gold);
+            flex-shrink: 0;
+        }
+
+        .oncourt-checkbox-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            font-size: 0.68rem;
+            background: var(--header-bg);
+            padding: 1px 4px;
+            border-radius: 3px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            color: var(--text-muted);
+            z-index: 5;
+        }
+
+        .oncourt-checkbox-label input {
+            cursor: pointer;
+            width: 12px;
+            height: 12px;
+            accent-color: var(--success-green);
+        }
+
+        .player-note-input {
+            width: 55px;
+            background: var(--header-bg);
+            color: var(--accent-blue);
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            padding: 1px 2px;
+            font-size: 0.72rem;
+            font-weight: bold;
+            z-index: 5;
+        }
+
+        /* COMPACT STEPPERS */
+        .stepper-unit {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            background: var(--header-bg);
+            padding: 1px 3px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            justify-content: center;
+        }
+
+        .stat-val {
+            width: 16px;
+            text-align: center;
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: var(--text-light);
+        }
+
+        .step-btns {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .step-btn {
+            background: var(--border-color);
+            color: var(--text-light);
+            border: none;
+            width: 15px;
+            height: 11px;
+            line-height: 9px;
+            font-size: 8px;
+            border-radius: 2px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .step-btn:active {
+            background: var(--accent-gold);
+            color: #000;
+        }
+
+        .step-btn.dn {
+            background: var(--card-bg);
+            color: var(--text-muted);
+        }
+
+        .step-btn.dn:active {
+            background: var(--danger-red);
+            color: #fff;
+        }
+
+        .pts-cell {
+            color: var(--success-green) !important;
+            font-size: 0.95rem;
+            font-weight: 900;
+        }
+
+        .pct-cell {
+            color: var(--accent-blue);
+            font-weight: 800;
+            font-size: 0.82rem;
+        }
+
+        /* ROSTER MANAGEMENT STYLES */
+        .roster-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 12px;
+        }
+
+        .roster-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .roster-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 8px;
+        }
+
+        .roster-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--header-bg);
+            padding: 8px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            font-size: 0.85rem;
+            gap: 6px;
+        }
+
+        .roster-item.inactive {
+            opacity: 0.5;
+            border-color: var(--danger-red);
+        }
+
+        .roster-item input[type="text"] {
+            background: var(--card-bg);
+            color: var(--text-light);
+            border: 1px solid var(--border-color);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .playing-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .playing-toggle input {
+            cursor: pointer;
+            width: 15px;
+            height: 15px;
+        }
+
+        .actions-bar {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: var(--card-bg);
+            color: var(--text-light);
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .action-btn:active {
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+        }
+
+        .action-btn.save-match-btn {
+            background: var(--success-green);
+            color: #fff;
+            border-color: var(--success-green);
+        }
+
+        .action-btn.reset-match-btn {
+            background: var(--danger-red);
+            color: #fff;
+            border-color: var(--danger-red);
+        }
+
+        .archive-selector {
+            background: var(--card-bg);
+            color: var(--accent-gold);
+            border: 1.5px solid var(--accent-gold);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+        }
+
+        /* PRINT BOX SCORE CONTAINER STYLES */
+        #printBoxScoreContainer {
+            display: none;
+        }
+
+        @media print {
+            body { background: #fff !important; color: #000 !important; font-size: 11px !important; }
+            .nav-tabs, .matchup-selector-bar, .quarter-filter-bar, .actions-bar, .step-btns, .hotkey-banner, .theme-toggle-btn, input[type="radio"], input[type="checkbox"], .view-panel { display: none !important; }
+            #printBoxScoreContainer { display: block !important; }
+            .team-card { background: #fff; border: 1px solid #000; box-shadow: none; margin-bottom: 15px; }
+            table.stat-table th { background: #eee !important; color: #000 !important; }
+            .team-header-banner { background: #eee !important; border-left: 4px solid #000 !important; color: #000 !important; }
+        }
+
+        @media (max-width: 1150px) {
+            .matchup-grid-sidebyside {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body id="appBody">
+
+    <header class="app-header">
+        <div class="header-title-container">
+            <h1>Congre Basketball Olympics</h1>
+            <p>Season 2 — Live Match Stat Tracker</p>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+            <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">🌙 Night Mode</button>
+        </div>
+    </header>
+
+    <!-- LIVE SEPARATE SCOREBOARD BOX -->
+    <div class="live-scoreboard-box">
+        <div class="team-score-summary">
+            <h3 id="homeTeamScoreLabel">HOME TEAM</h3>
+            <div class="quarter-breakdown">
+                <span>Q1: <strong id="homeQ1Pts">0</strong></span>
+                <span>Q2: <strong id="homeQ2Pts">0</strong></span>
+                <span>Q3: <strong id="homeQ3Pts">0</strong></span>
+                <span>Q4: <strong id="homeQ4Pts">0</strong></span>
+                <span>OT: <strong id="homeOtPts">0</strong></span>
+            </div>
+            <div class="running-total-score" id="homeTotalPts">0 PTS</div>
+        </div>
+        <div style="font-size:1.3rem; font-weight:900; color:var(--accent-gold);">VS</div>
+        <div class="team-score-summary">
+            <h3 id="awayTeamScoreLabel">AWAY TEAM</h3>
+            <div class="quarter-breakdown">
+                <span>Q1: <strong id="awayQ1Pts">0</strong></span>
+                <span>Q2: <strong id="awayQ2Pts">0</strong></span>
+                <span>Q3: <strong id="awayQ3Pts">0</strong></span>
+                <span>Q4: <strong id="awayQ4Pts">0</strong></span>
+                <span>OT: <strong id="awayOtPts">0</strong></span>
+            </div>
+            <div class="running-total-score" id="awayTotalPts">0 PTS</div>
+        </div>
+    </div>
+
+    <!-- HOTKEY INSTRUCTION BANNER -->
+    <div class="hotkey-banner">
+        <span style="color:var(--accent-gold); font-weight:bold;">⚡ ACTIVE PLAYER: <span id="activePlayerIndicator" style="color:var(--accent-blue);">None Selected</span></span>
+        <span style="color:var(--text-light); font-size:0.78rem;">
+            <strong>[2]</strong> 2M | <strong>[3]</strong> 3M | <strong>[4]</strong> 4M | <strong>[1]</strong> 1FTM | <strong>[R]</strong> REB | <strong>[A]</strong> AST | <strong>[S]</strong> STL | <strong>[B]</strong> BLK | <strong>[T]</strong> TO | <strong>[Q]</strong> 1FTA | <strong>[W]</strong> 2A | <strong>[E]</strong> 3A | <strong>[Z]</strong> 4A
+        </span>
+    </div>
+
+    <nav class="nav-tabs" id="mainNavTabs">
+        <button class="nav-btn matchup-btn active" onclick="switchTab('matchup-view')">⚡ LIVE MATCH-UP VIEW</button>
+        <button class="nav-btn" onclick="switchTab('percentages-view')">📊 OVERALL PERCENTAGES & BOX SCORE</button>
+        <button class="nav-btn" onclick="switchTab('leaders-view')">🏆 TOP 5 LEADERS</button>
+        <button class="nav-btn" onclick="switchTab('team-TEAM1')" id="tabNavTeam1">Team 1</button>
+        <button class="nav-btn" onclick="switchTab('team-TEAM2')" id="tabNavTeam2">Team 2</button>
+    </nav>
+
+    <div class="actions-bar">
+        <button class="action-btn save-match-btn" onclick="saveCurrentMatchToArchive()">💾 Save Match to Archive</button>
+        <button class="action-btn reset-match-btn" onclick="resetLiveMatchStats()">🔄 Reset Live Stats to 0</button>
+        <button class="action-btn" style="background:var(--accent-blue); color:#fff;" onclick="exportArchiveJSON()">📤 Export Archive (JSON)</button>
+        <label class="action-btn" style="background:#6366f1; color:#fff; cursor:pointer; margin:0;">
+            📥 Import Archive <input type="file" id="importFile" accept=".json" style="display:none" onchange="importArchiveJSON(event)">
+        </label>
+        <button class="action-btn" onclick="window.print()">🖨️ Print / Save PDF</button>
+        <button class="action-btn" onclick="exportCSV()">📥 Download CSV</button>
+    </div>
+
+    <!-- LIVE MATCHUP VIEW (SIDE BY SIDE) -->
+    <div id="matchup-view" class="view-panel active">
+        <!-- MANUAL SETUP CONFIGURATION -->
+        <div class="setup-container">
+            <h3 style="color:var(--accent-gold); margin-bottom: 10px;">⚙️ Manual Team & Roster Configuration</h3>
+            <div class="setup-row">
+                <label>Home Team Name:</label>
+                <input type="text" id="homeTeamNameInput" value="Team 1" oninput="updateTeamConfigs()">
+                <label>Number of Players:</label>
+                <input type="number" id="homePlayerCountInput" value="10" min="1" max="25" onchange="generateRosterInputs('home')">
+            </div>
+            <div class="setup-row">
+                <label>Away Team Name:</label>
+                <input type="text" id="awayTeamNameInput" value="Team 2" oninput="updateTeamConfigs()">
+                <label>Number of Players:</label>
+                <input type="number" id="awayPlayerCountInput" value="10" min="1" max="25" onchange="generateRosterInputs('away')">
+            </div>
+        </div>
+
+        <div class="matchup-selector-bar">
+            <div class="team-select-box">
+                <label style="color:var(--accent-gold); font-weight:bold;">HOME TEAM (LEFT):</label>
+                <select id="homeTeamSelect" onchange="renderMatchup()"></select>
+            </div>
+            <div class="versus-badge">VS</div>
+            <div class="team-select-box">
+                <label style="color:var(--accent-gold); font-weight:bold;">AWAY TEAM (RIGHT):</label>
+                <select id="awayTeamSelect" onchange="renderMatchup()"></select>
+            </div>
+        </div>
+
+        <div class="quarter-filter-bar">
+            <div class="quarter-filters-group">
+                <span style="color:var(--text-muted); font-weight:bold; margin-right:5px; font-size:0.85rem;">QUARTER FILTER (ACTIVE FOR HOTKEYS):</span>
+                <button class="q-btn active" onclick="setQuarterView('ALL')">ALL (Q1 Default)</button>
+                <button class="q-btn" onclick="setQuarterView('Q1')">Q1</button>
+                <button class="q-btn" onclick="setQuarterView('Q2')">Q2</button>
+                <button class="q-btn" onclick="setQuarterView('Q3')">Q3</button>
+                <button class="q-btn" onclick="setQuarterView('Q4')">Q4</button>
+                <button class="q-btn" onclick="setQuarterView('OT')">OT</button>
+            </div>
+            <button class="action-btn reset-match-btn" style="padding: 4px 10px; font-size: 0.8rem;" onclick="resetLiveMatchStats()">🔄 Reset Live Stats to 0</button>
+        </div>
+
+        <div class="matchup-grid-sidebyside">
+            <div id="homeMatchupContainer" class="team-card"></div>
+            <div id="awayMatchupContainer" class="team-card"></div>
+        </div>
+    </div>
+
+    <!-- OVERALL PERCENTAGES & COMBINED BOX SCORE VIEW -->
+    <div id="percentages-view" class="view-panel">
+        <div class="matchup-grid-vertical">
+            <div id="homePercentagesContainer" class="team-card"></div>
+            <div id="awayPercentagesContainer" class="team-card"></div>
+        </div>
+    </div>
+
+    <!-- TOP 5 LEADERS VIEW -->
+    <div id="leaders-view" class="view-panel">
+        <div class="team-card">
+            <div class="team-header-banner">
+                <h2 style="color:var(--accent-gold);">🏆 TOURNAMENT TOP 5 STAT LEADERS (AVERAGES)</h2>
+            </div>
+            <div id="leadersContainer"></div>
+        </div>
+    </div>
+
+    <!-- ROSTER MANAGEMENT & TEAM ARCHIVES VIEWS -->
+    <div id="single-team-views"></div>
+
+    <!-- PRINTABLE BOX SCORE CONTAINER (VISIBLE ONLY DURING PRINTING) -->
+    <div id="printBoxScoreContainer">
+        <div style="text-align: center; margin-bottom: 15px;">
+            <h2 style="font-size: 1.4rem; text-transform: uppercase;">Congre Basketball Olympics Season 2</h2>
+            <p style="font-size: 0.9rem; font-weight: bold; margin-top: 3px;" id="printMatchTitle">Official Box Score</p>
+        </div>
+        <div id="printHomeBoxScore" style="margin-bottom: 15px;"></div>
+        <div id="printAwayBoxScore"></div>
+    </div>
+
+    <script>
+        let currentQuarterFilter = 'ALL';
+        let selectedPlayerContext = null; 
+        let currentTheme = 'night';
+        let matchArchive = [];
+
+        let statsData = {};
+        let onCourtPlayers = { home: {}, away: {} }; 
+        let playerNotes = {}; 
+
+        let teamsData = {
+            "TEAM1": {
+                name: "Team 1",
+                roster: Array.from({length: 10}, (_, i) => ({id: `t1_p${i+1}`, jersey: i+1, name: `Player ${i+1}`, active: true}))
+            },
+            "TEAM2": {
+                name: "Team 2",
+                roster: Array.from({length: 10}, (_, i) => ({id: `t2_p${i+1}`, jersey: i+1, name: `Player ${i+1}`, active: true}))
+            }
+        };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadFromLocalStorage();
+            populateSelects();
+            initOnCourtDefaults();
+            renderTeamViews();
+            renderMatchup();
+            setupKeyboardHotkeys();
+        });
+
+        function toggleTheme() {
+            currentTheme = currentTheme === 'night' ? 'day' : 'night';
+            const body = document.getElementById("appBody");
+            const btn = document.getElementById("themeToggleBtn");
+            if (currentTheme === 'day') {
+                body.classList.add("day-mode");
+                btn.textContent = "☀️ Day Mode";
+            } else {
+                body.classList.remove("day-mode");
+                btn.textContent = "🌙 Night Mode";
+            }
+            saveToLocalStorage();
+        }
+
+        function initOnCourtDefaults() {
+            ['home', 'away'].forEach(prefix => {
+                if (!onCourtPlayers[prefix]) onCourtPlayers[prefix] = {};
+                const teamKey = document.getElementById(prefix + 'TeamSelect')?.value || Object.keys(teamsData)[0];
+                const team = teamsData[teamKey];
+                if (team) {
+                    team.roster.filter(p => p.active).forEach((p, idx) => {
+                        if (onCourtPlayers[prefix][p.id] === undefined) {
+                            onCourtPlayers[prefix][p.id] = idx < 5;
+                        }
+                    });
+                }
+            });
+        }
+
+        function saveToLocalStorage() {
+            const state = {
+                statsData,
+                matchArchive,
+                onCourtPlayers,
+                playerNotes,
+                homeTeam: document.getElementById("homeTeamSelect")?.value,
+                awayTeam: document.getElementById("awayTeamSelect")?.value,
+                selectedPlayerContext,
+                currentTheme,
+                teamsData
+            };
+            localStorage.setItem("cbl_statkeeper_state", JSON.stringify(state));
+        }
+
+        function loadFromLocalStorage() {
+            try {
+                const saved = localStorage.getItem("cbl_statkeeper_state");
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (parsed.statsData) Object.assign(statsData, parsed.statsData);
+                    if (parsed.matchArchive) matchArchive = parsed.matchArchive;
+                    if (parsed.onCourtPlayers) Object.assign(onCourtPlayers, parsed.onCourtPlayers);
+                    if (parsed.playerNotes) Object.assign(playerNotes, parsed.playerNotes);
+                    if (parsed.teamsData) teamsData = parsed.teamsData;
+                    if (parsed.selectedPlayerContext) selectedPlayerContext = parsed.selectedPlayerContext;
+                    if (parsed.currentTheme) {
+                        currentTheme = parsed.currentTheme;
+                        if (currentTheme === 'day') {
+                            document.getElementById("appBody").classList.add("day-mode");
+                            document.getElementById("themeToggleBtn").textContent = "☀️ Day Mode";
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error("Error loading autosave state:", e);
+            }
+        }
+
+        function updateTeamConfigs() {
+            const t1Name = document.getElementById("homeTeamNameInput").value || "Team 1";
+            const t2Name = document.getElementById("awayTeamNameInput").value || "Team 2";
+            
+            teamsData["TEAM1"].name = t1Name;
+            teamsData["TEAM2"].name = t2Name;
+
+            document.getElementById("tabNavTeam1").textContent = t1Name;
+            document.getElementById("tabNavTeam2").textContent = t2Name;
+
+            populateSelects();
+            renderTeamViews();
+            renderMatchup();
+            saveToLocalStorage();
+        }
+
+        function generateRosterInputs(prefix) {
+            const key = prefix === 'home' ? 'TEAM1' : 'TEAM2';
+            const countInput = document.getElementById(prefix + 'PlayerCountInput');
+            const count = parseInt(countInput.value) || 1;
+
+            let currentRoster = teamsData[key].roster;
+            let newRoster = [];
+
+            for (let i = 0; i < count; i++) {
+                if (currentRoster[i]) {
+                    newRoster.push(currentRoster[i]);
+                } else {
+                    newRoster.push({id: `${key.toLowerCase()}_p${i+1}`, jersey: i+1, name: `Player ${i+1}`, active: true});
+                }
+            }
+            teamsData[key].roster = newRoster;
+            renderTeamViews();
+            renderMatchup();
+            saveToLocalStorage();
+        }
+
+        function updatePlayerDetail(teamKey, pId, field, value) {
+            let player = teamsData[teamKey].roster.find(p => p.id === pId);
+            if (player) {
+                if (field === 'name') player.name = value;
+                if (field === 'jersey') player.jersey = value;
+                renderMatchup();
+                saveToLocalStorage();
+            }
+        }
+
+        function populateSelects() {
+            const homeSelect = document.getElementById("homeTeamSelect");
+            const awaySelect = document.getElementById("awayTeamSelect");
+            let keys = Object.keys(teamsData);
+
+            homeSelect.innerHTML = "";
+            awaySelect.innerHTML = "";
+
+            keys.forEach(key => {
+                homeSelect.innerHTML += `<option value="${key}">${teamsData[key].name}</option>`;
+                awaySelect.innerHTML += `<option value="${key}">${teamsData[key].name}</option>`;
+            });
+
+            const saved = localStorage.getItem("cbl_statkeeper_state");
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    if (parsed.homeTeam) homeSelect.value = parsed.homeTeam;
+                    if (parsed.awayTeam) awaySelect.value = parsed.awayTeam;
+                } catch (e) {}
+            }
+            if (homeSelect.value === awaySelect.value && keys.length > 1) {
+                awaySelect.value = keys[1];
+            }
+        }
+
+        function resetLiveMatchStats() {
+            if (confirm("Are you sure you want to reset all live session statistics to 0?")) {
+                statsData = {};
+                selectedPlayerContext = null;
+                const indicator = document.getElementById("activePlayerIndicator");
+                if (indicator) {
+                    indicator.textContent = "None Selected";
+                    indicator.style.color = "var(--accent-blue)";
+                }
+                saveToLocalStorage();
+                renderMatchup();
+                renderTeamViews();
+            }
+        }
+
+        function togglePlayerActive(teamKey, playerId) {
+            let player = teamsData[teamKey].roster.find(p => p.id === playerId);
+            if (player) {
+                player.active = !player.active;
+                renderTeamViews();
+                renderMatchup();
+                saveToLocalStorage();
+            }
+        }
+
+        function toggleOnCourt(prefix, pId) {
+            if (!onCourtPlayers[prefix]) onCourtPlayers[prefix] = {};
+            onCourtPlayers[prefix][pId] = !onCourtPlayers[prefix][pId];
+            
+            if (!onCourtPlayers[prefix][pId] && selectedPlayerContext && selectedPlayerContext.pId === pId) {
+                selectedPlayerContext = null;
+                document.getElementById("activePlayerIndicator").textContent = "None Selected";
+                document.getElementById("activePlayerIndicator").style.color = "var(--accent-blue)";
+            }
+            
+            renderMatchup();
+            saveToLocalStorage();
+        }
+
+        function updatePlayerNote(prefix, pId, val) {
+            playerNotes[`${prefix}_${pId}`] = val;
+            saveToLocalStorage();
+        }
+
+        function selectPlayerRadio(prefix, pId, playerName) {
+            if (!onCourtPlayers[prefix] || !onCourtPlayers[prefix][pId]) {
+                alert("This player is currently on the bench (Court box unticked). Please tick 'Court' to select them for hotkeys.");
+                renderMatchup();
+                return;
+            }
+            selectedPlayerContext = { prefix, pId, playerName };
+            const indicator = document.getElementById("activePlayerIndicator");
+            if (indicator) {
+                indicator.textContent = playerName;
+                indicator.style.color = "var(--success-green)";
+            }
+            if (document.activeElement) {
+                document.activeElement.blur();
+            }
+            document.body.focus();
+            saveToLocalStorage();
+        }
+
+        function setupKeyboardHotkeys() {
+            window.addEventListener('keydown', (e) => {
+                if (['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+                if (!selectedPlayerContext) return;
+
+                const { prefix, pId } = selectedPlayerContext;
+                if (!onCourtPlayers[prefix] || !onCourtPlayers[prefix][pId]) return;
+
+                const qKey = (currentQuarterFilter === 'ALL' ? 'q1' : currentQuarterFilter).toLowerCase();
+                const key = e.key.toLowerCase();
+
+                if (key === '1') {
+                    e.preventDefault();
+                    stepStat(prefix, pId, `${qKey}_ftm`, 1);
+                } else if (key === '2') {
+                    e.preventDefault();
+                    stepStat(prefix, pId, `${qKey}_m2`, 1);
+                } else if (key === '3') {
+                    e.preventDefault();
+                    stepStat(prefix, pId, `${qKey}_m3`, 1);
+                } else if (key === '4') {
+                    e.preventDefault();
+                    stepStat(prefix, pId, `${qKey}_m4`, 1);
+                } else if (key === 'r') {
+                    e.preventDefault();
+                    stepStat(prefix, pId, 'reb', 1);
+                } else if (key === 'a') {
+                    e.preventDefault();
+                    stepStat(prefix, pId, 'ast', 1);
+                } else if (key === 's') {
+                    e.preventDefault();
+                    stepStat(prefix, pId, 'stl', 1);
+                } else if (key === 'b') {
+                    e.preventDefault();
+                    stepStat(prefix, pId, 'blk', 1);
+                } else if (key === 't') {
+                    e.preventDefault();
+                    stepStat(prefix, pId, 'to', 1);
+                } else if (key === 'q') {
+                    e.preventDefault();
+                    stepStat(prefix, pId, `${qKey}_fta`, 1);
+                } else if (key === 'w') {
+                    e.preventDefault();
+                    stepStat(prefix, pId, `${qKey}_a2`, 1);
+                } else if (key === 'e') {
+                    e.preventDefault();
+                    stepStat(prefix, pId, `${qKey}_a3`, 1);
+                } else if (key === 'z') {
+                    e.preventDefault();
+                    stepStat(prefix, pId, `${qKey}_a4`, 1);
+                }
+            });
+        }
+
+        function saveCurrentMatchToArchive() {
+            const homeKey = document.getElementById("homeTeamSelect").value;
+            const awayKey = document.getElementById("awayTeamSelect").value;
+            const homeName = teamsData[homeKey].name;
+            const awayName = teamsData[awayKey].name;
+            
+            const matchSnapshot = {
+                id: Date.now(),
+                date: new Date().toLocaleString(),
+                homeKey: homeKey,
+                awayKey: awayKey,
+                homeName: homeName,
+                awayName: awayName,
+                stats: JSON.parse(JSON.stringify(statsData))
+            };
+
+            matchArchive.push(matchSnapshot);
+            saveToLocalStorage();
+            renderTeamViews();
+
+            const filename = `${homeName} vs ${awayName}_Match_Archive_${new Date().toISOString().slice(0,10)}.json`;
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(matchSnapshot, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", filename);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+
+            alert(`Match saved successfully and downloaded as "${filename}"!`);
+        }
+
+        function exportArchiveJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(matchArchive, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `Congre_Basketball_MatchArchive_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importArchiveJSON(event) {
+            const fileReader = new FileReader();
+            if (event.target.files[0]) {
+                fileReader.readAsText(event.target.files[0], "UTF-8");
+                fileReader.onload = (e) => {
+                    try {
+                        const imported = JSON.parse(e.target.result);
+                        if (Array.isArray(imported)) {
+                            imported.forEach(impMatch => {
+                                if (!matchArchive.some(m => m.id === impMatch.id)) {
+                                    matchArchive.push(impMatch);
+                                }
+                            });
+                            saveToLocalStorage();
+                            alert(`Successfully imported/merged matches into archive! Running averages updated.`);
+                            renderTeamViews();
+                            renderMatchup();
+                        } else if (imported.homeName && imported.awayName) {
+                            if (!matchArchive.some(m => m.id === imported.id)) {
+                                matchArchive.push(imported);
+                                saveToLocalStorage();
+                                alert(`Successfully imported match: ${imported.homeName} vs ${imported.awayName}`);
+                                renderTeamViews();
+                                renderMatchup();
+                            } else {
+                                alert("This match is already in the archive.");
+                            }
+                        } else {
+                            alert("Invalid archive format.");
+                        }
+                    } catch (err) {
+                        alert("Error parsing archive JSON file.");
+                    }
+                };
+            }
+        }
+
+        function renderTeamViews() {
+            const container = document.getElementById("single-team-views");
+            container.innerHTML = "";
+
+            Object.keys(teamsData).forEach(teamKey => {
+                const team = teamsData[teamKey];
+                let archiveOptions = `<option value="LIVE">⚡ Current Active / Live Session</option>`;
+                matchArchive.forEach((m, idx) => {
+                    archiveOptions += `<option value="${m.id}">Match #${idx + 1} (${m.date}) - vs ${m.homeKey === teamKey ? m.awayName : m.homeName}</option>`;
+                });
+
+                let rosterItemsHTML = "";
+                team.roster.forEach(player => {
+                    rosterItemsHTML += `
+                        <div class="roster-item ${player.active ? '' : 'inactive'}">
+                            <div style="display:flex; align-items:center; gap:6px; flex:1;">
+                                <input type="text" value="${player.jersey}" style="width:40px; text-align:center;" oninput="updatePlayerDetail('${teamKey}', '${player.id}', 'jersey', this.value)" placeholder="No.">
+                                <input type="text" value="${player.name}" style="flex:1;" oninput="updatePlayerDetail('${teamKey}', '${player.id}', 'name', this.value)" placeholder="Player Name">
+                            </div>
+                            <label class="playing-toggle">
+                                <input type="checkbox" ${player.active ? 'checked' : ''} onchange="togglePlayerActive('${teamKey}', '${player.id}')">
+                                <span>${player.active ? 'PLAYING' : 'DNP'}</span>
+                            </label>
+                        </div>
+                    `;
+                });
+
+                const viewDiv = document.createElement("div");
+                viewDiv.id = `team-${teamKey}`;
+                viewDiv.className = "view-panel";
+                viewDiv.innerHTML = `
+                    <div class="team-card" style="margin-bottom:12px;">
+                        <div class="team-header-banner">
+                            <h2 style="color:var(--accent-gold);">${team.name} — TEAM STATS & ARCHIVES</h2>
+                        </div>
+                        <div style="margin-bottom:10px;">
+                            <label style="color:var(--text-muted); font-weight:bold; display:block; margin-bottom:4px;">📂 SELECT MATCH VIEW / ARCHIVE:</label>
+                            <select id="archiveSelect_${teamKey}" class="archive-selector" onchange="renderTeamStatsTab('${teamKey}')">
+                                ${archiveOptions}
+                            </select>
+                        </div>
+                        <div id="teamStatsContainer_${teamKey}"></div>
+                    </div>
+
+                    <div class="roster-card">
+                        <div class="roster-header">
+                            <h3 style="color:var(--accent-gold);">Roster Management</h3>
+                        </div>
+                        <div class="roster-list">${rosterItemsHTML}</div>
+                    </div>
+                `;
+                container.appendChild(viewDiv);
+                renderTeamStatsTab(teamKey);
+            });
+        }
+
+        function renderTeamStatsTab(teamKey) {
+            const selectEl = document.getElementById(`archiveSelect_${teamKey}`);
+            const selectedVal = selectEl ? selectEl.value : 'LIVE';
+            const container = document.getElementById(`teamStatsContainer_${teamKey}`);
+
+            if (selectedVal === 'LIVE') {
+                container.innerHTML = buildAggregatedTeamTable(teamKey, statsData, "Live Session Stats");
+            } else {
+                const match = matchArchive.find(m => m.id == selectedVal);
+                if (match) {
+                    container.innerHTML = buildAggregatedTeamTable(teamKey, match.stats, `Archived Match (${match.date})`);
+                }
+            }
+        }
+
+        function buildAggregatedTeamTable(teamKey, sourceStats, subtitle) {
+            const team = teamsData[teamKey];
+            let rowsHTML = "";
+            let totals = { m2:0, a2:0, m3:0, a3:0, m4:0, a4:0, ftm:0, fta:0, reb:0, ast:0, stl:0, blk:0, to:0, pf:0, pts:0 };
+            let gamesCount = matchArchive.length > 0 ? matchArchive.length : 1;
+
+            team.roster.forEach(player => {
+                const pId = player.id;
+                let p2m=0, p2a=0, p3m=0, p3a=0, p4m=0, p4a=0, pftm=0, pfta=0, preb=0, past=0, pstl=0, pblk=0, pto=0, ppf=0;
+
+                Object.keys(sourceStats).forEach(k => {
+                    if (k.includes(pId)) {
+                        const val = sourceStats[k];
+                        if (k.endsWith('_m2')) p2m += val;
+                        if (k.endsWith('_a2')) p2a += val;
+                        if (k.endsWith('_m3')) p3m += val;
+                        if (k.endsWith('_a3')) p3a += val;
+                        if (k.endsWith('_m4')) p4m += val;
+                        if (k.endsWith('_a4')) p4a += val;
+                        if (k.endsWith('_ftm')) pftm += val;
+                        if (k.endsWith('_fta')) pfta += val;
+                        if (k.endsWith('_reb')) preb += val;
+                        if (k.endsWith('_ast')) past += val;
+                        if (k.endsWith('_stl')) pstl += val;
+                        if (k.endsWith('_blk')) pblk += val;
+                        if (k.endsWith('_to')) pto += val;
+                        if (k.endsWith('_pf')) ppf += val;
+                    }
+                });
+
+                const pPts = (p2m * 2) + (p3m * 3) + (p4m * 4) + pftm;
+                const pct2 = p2a > 0 ? Math.round((p2m/p2a)*100)+'%' : '0%';
+                const pct3 = p3a > 0 ? Math.round((p3m/p3a)*100)+'%' : '0%';
+                const pct4 = p4a > 0 ? Math.round((p4m/p4a)*100)+'%' : '0%';
+                const pctFt = pfta > 0 ? Math.round((pftm/pfta)*100)+'%' : '0%';
+
+                totals.m2 += p2m; totals.a2 += p2a;
+                totals.m3 += p3m; totals.a3 += p3a;
+                totals.m4 += p4m; totals.a4 += p4a;
+                totals.ftm += pftm; totals.fta += pfta;
+                totals.reb += preb; totals.ast += past;
+                totals.stl += pstl; totals.blk += pblk;
+                totals.to += pto; totals.pf += ppf;
+                totals.pts += pPts;
+
+                rowsHTML += `<tr>
+                    <td><strong>${player.jersey}</strong></td>
+                    <td class="player-col">${player.name}</td>
+                    <td>${p2m}/${p2a}</td><td class="pct-cell">${pct2}</td>
+                    <td>${p3m}/${p3a}</td><td class="pct-cell">${pct3}</td>
+                    <td>${p4m}/${p4a}</td><td class="pct-cell">${pct4}</td>
+                    <td>${pftm}/${pfta}</td><td class="pct-cell">${pctFt}</td>
+                    <td>${preb}</td><td>${past}</td><td>${pstl}</td><td>${pblk}</td><td>${pto}</td><td>${ppf}</td>
+                    <td class="pts-cell">${pPts}</td>
+                </tr>`;
+            });
+
+            const avg = (val) => (val / gamesCount).toFixed(1);
+            const tPct2 = totals.a2 > 0 ? Math.round((totals.m2/totals.a2)*100)+'%' : '0%';
+            const tPct3 = totals.a3 > 0 ? Math.round((totals.m3/totals.a3)*100)+'%' : '0%';
+            const tPct4 = totals.a4 > 0 ? Math.round((totals.m4/totals.a4)*100)+'%' : '0%';
+            const tPctFt = totals.fta > 0 ? Math.round((totals.ftm/totals.fta)*100)+'%' : '0%';
+
+            return `
+                <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:8px;">Mode: <strong>${subtitle}</strong> (Averaged across ${gamesCount} game(s))</p>
+                <div class="table-responsive">
+                    <table class="stat-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th class="player-col">PLAYER</th>
+                                <th>2PT (M/A)</th><th>2FG%</th>
+                                <th>3PT (M/A)</th><th>3FG%</th>
+                                <th>4PT (M/A)</th><th>4FG%</th>
+                                <th>FT (M/A)</th><th>FT%</th>
+                                <th>REB</th><th>AST</th><th>STL</th><th>BLK</th><th>TO</th><th>PF</th>
+                                <th>PTS</th>
+                            </tr>
+                        </thead>
+                        <tbody>${rowsHTML}</tbody>
+                        <tfoot>
+                            <tr style="background:var(--header-bg); color:var(--accent-gold);">
+                                <td colspan="2" class="player-col">TEAM TOTALS</td>
+                                <td>${totals.m2}/${totals.a2}</td><td class="pct-cell">${tPct2}</td>
+                                <td>${totals.m3}/${totals.a3}</td><td class="pct-cell">${tPct3}</td>
+                                <td>${totals.m4}/${totals.a4}</td><td class="pct-cell">${tPct4}</td>
+                                <td>${totals.ftm}/${totals.fta}</td><td class="pct-cell">${tPctFt}</td>
+                                <td>${totals.reb}</td><td>${totals.ast}</td><td>${totals.stl}</td><td>${totals.blk}</td><td>${totals.to}</td><td>${totals.pf}</td>
+                                <td class="pts-cell">${totals.pts}</td>
+                            </tr>
+                            <tr style="background:var(--card-bg); color:var(--accent-blue);">
+                                <td colspan="2" class="player-col">TEAM PER-GAME AVG</td>
+                                <td colspan="2">${avg(totals.m2)}/${avg(totals.a2)}</td>
+                                <td colspan="2">${avg(totals.m3)}/${avg(totals.a3)}</td>
+                                <td colspan="2">${avg(totals.m4)}/${avg(totals.a4)}</td>
+                                <td colspan="2">${avg(totals.ftm)}/${avg(totals.fta)}</td>
+                                <td>${avg(totals.reb)}</td><td>${avg(totals.ast)}</td><td>${avg(totals.stl)}</td><td>${avg(totals.blk)}</td><td>${avg(totals.to)}</td><td>${avg(totals.pf)}</td>
+                                <td class="pts-cell">${avg(totals.pts)}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            `;
+        }
+
+        function renderTopLeadersTab() {
+            const container = document.getElementById("leadersContainer");
+            let allPlayers = [];
+            const numGames = Math.max(1, matchArchive.length);
+
+            Object.keys(teamsData).forEach(teamKey => {
+                const team = teamsData[teamKey];
+                team.roster.forEach(player => {
+                    let pts=0, reb=0, ast=0, stl=0, blk=0, m3=0;
+                    let statSources = [statsData, ...matchArchive.map(m => m.stats)];
+
+                    statSources.forEach(source => {
+                        let p2m=0, p3m=0, p4m=0, pftm=0, preb=0, past=0, pstl=0, pblk=0;
+                        Object.keys(source).forEach(k => {
+                            if (k.includes(player.id)) {
+                                const val = source[k];
+                                if (k.endsWith('_m2')) p2m += val;
+                                if (k.endsWith('_m3')) { p3m += val; m3 += val; }
+                                if (k.endsWith('_m4')) p4m += val;
+                                if (k.endsWith('_ftm')) pftm += val;
+                                if (k.endsWith('_reb')) preb += val;
+                                if (k.endsWith('_ast')) past += val;
+                                if (k.endsWith('_stl')) pstl += val;
+                                if (k.endsWith('_blk')) pblk += val;
+                            }
+                        });
+                        pts += (p2m * 2) + (p3m * 3) + (p4m * 4) + pftm;
+                        reb += preb; ast += past; stl += pstl; blk += pblk;
+                    });
+
+                    allPlayers.push({
+                        name: player.name,
+                        team: team.name,
+                        jersey: player.jersey,
+                        ptsAvg: pts / numGames,
+                        rebAvg: reb / numGames,
+                        astAvg: ast / numGames,
+                        stlAvg: stl / numGames,
+                        blkAvg: blk / numGames,
+                        m3Avg: m3 / numGames
+                    });
+                });
+            });
+
+            const makeLeaderTable = (title, key, unit) => {
+                const sorted = [...allPlayers].sort((a, b) => b[key] - a[key]).slice(0, 5);
+                let rows = "";
+                sorted.forEach((p, idx) => {
+                    rows += `<tr>
+                        <td><strong>#${idx + 1}</strong></td>
+                        <td class="player-col">${p.name} <span style="color:var(--text-muted); font-size:0.75rem;">(${p.team})</span></td>
+                        <td class="pts-cell">${p[key].toFixed(1)} ${unit}</td>
+                    </tr>`;
+                });
+                return `
+                    <div style="flex: 1; min-width: 220px; background:var(--header-bg); padding:10px; border-radius:8px; border:1px solid var(--border-color);">
+                        <h3 style="color:var(--accent-gold); margin-bottom:6px; font-size:0.9rem;">${title}</h3>
+                        <table class="stat-table">
+                            <thead><tr><th>Rank</th><th class="player-col">Player</th><th>Avg</th></tr></thead>
+                            <tbody>${rows || '<tr><td colspan="3">No stats recorded yet</td></tr>'}</tbody>
+                        </table>
+                    </div>
+                `;
+            };
+
+            container.innerHTML = `
+                <div style="display:flex; flex-wrap:wrap; gap:10px;">
+                    ${makeLeaderTable('🔥 Points Per Game (PPG)', 'ptsAvg', 'PTS')}
+                    ${makeLeaderTable('🏀 Rebounds Per Game (RPG)', 'rebAvg', 'REB')}
+                    ${makeLeaderTable('🎯 Assists Per Game (APG)', 'astAvg', 'AST')}
+                    ${makeLeaderTable(' Steals Per Game (SPG)', 'stlAvg', 'STL')}
+                    ${makeLeaderTable('🧱 Blocks Per Game (BPG)', 'blkAvg', 'BLK')}
+                    ${makeLeaderTable('☄️ 3-Pointers Made / Game', 'm3Avg', '3PM')}
+                </div>
+            `;
+        }
+
+        function makeStepper(prefix, pId, statKey) {
+            const key = `${prefix}_${pId}_${statKey}`;
+            if (!(key in statsData)) statsData[key] = 0;
+
+            const isOnCourt = onCourtPlayers[prefix] && onCourtPlayers[prefix][pId];
+            const disabledAttr = isOnCourt ? '' : 'disabled style="opacity:0.4;"';
+
+            return `
+                <div class="stepper-unit" ${disabledAttr}>
+                    <span class="stat-val" id="val_${key}">${statsData[key]}</span>
+                    <div class="step-btns">
+                        <button class="step-btn" ${disabledAttr} onclick="stepStat('${prefix}', '${pId}', '${statKey}', 1)">▲</button>
+                        <button class="step-btn dn" ${disabledAttr} onclick="stepStat('${prefix}', '${pId}', '${statKey}', -1)">▼</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function stepStat(prefix, pId, statKey, delta) {
+            if (!onCourtPlayers[prefix] || !onCourtPlayers[prefix][pId]) return;
+
+            const key = `${prefix}_${pId}_${statKey}`;
+            if (!(key in statsData)) statsData[key] = 0;
+            statsData[key] = Math.max(0, statsData[key] + delta);
+
+            if (delta > 0) {
+                if (statKey.endsWith('m2')) stepStat(prefix, pId, statKey.replace('m2', 'a2'), 1);
+                if (statKey.endsWith('m3')) stepStat(prefix, pId, statKey.replace('m3', 'a3'), 1);
+                if (statKey.endsWith('m4')) stepStat(prefix, pId, statKey.replace('m4', 'a4'), 1);
+                if (statKey.endsWith('ftm')) stepStat(prefix, pId, statKey.replace('ftm', 'fta'), 1);
+            }
+
+            const valEl = document.getElementById(`val_${key}`);
+            if (valEl) {
+                valEl.textContent = statsData[key];
+                valEl.classList.add('flashing');
+                setTimeout(() => valEl.classList.remove('flashing'), 800);
+            }
+
+            const nameEl = document.getElementById(`name_${prefix}_${pId}`);
+            if (nameEl) {
+                nameEl.classList.add('flashing');
+                setTimeout(() => nameEl.classList.remove('flashing'), 800);
+            }
+
+            updateRowAndTotals(prefix, pId);
+            saveToLocalStorage();
+        }
+
+        function getStatVal(prefix, pId, statKey) {
+            return statsData[`${prefix}_${pId}_${statKey}`] || 0;
+        }
+
+        function updateRowAndTotals(prefix, pId) {
+            let m2 = 0, a2 = 0, m3 = 0, a3 = 0, m4 = 0, a4 = 0, ftm = 0, fta = 0;
+            ['q1', 'q2', 'q3', 'q4', 'ot'].forEach(q => {
+                m2 += getStatVal(prefix, pId, `${q}_m2`);
+                a2 += getStatVal(prefix, pId, `${q}_a2`);
+                m3 += getStatVal(prefix, pId, `${q}_m3`);
+                a3 += getStatVal(prefix, pId, `${q}_a3`);
+                m4 += getStatVal(prefix, pId, `${q}_m4`);
+                a4 += getStatVal(prefix, pId, `${q}_a4`);
+                ftm += getStatVal(prefix, pId, `${q}_ftm`);
+                fta += getStatVal(prefix, pId, `${q}_fta`);
+            });
+
+            const pts = (m2 * 2) + (m3 * 3) + (m4 * 4) + ftm;
+            const ptsEl = document.getElementById(`pts_${prefix}_${pId}`);
+            if (ptsEl) ptsEl.textContent = pts;
+
+            calcTableTotals(prefix);
+        }
+
+        function buildStatTableHTML(teamKey, prefix) {
+            const team = teamsData[teamKey];
+            const activePlayers = team.roster.filter(p => p.active);
+            let rowsHTML = "";
+
+            if (!onCourtPlayers[prefix]) onCourtPlayers[prefix] = {};
+
+            if (activePlayers.length === 0) {
+                rowsHTML = `<tr><td colspan="25" style="padding:15px; color:var(--text-muted);">No active players selected. Enable players in roster view.</td></tr>`;
+            } else {
+                activePlayers.forEach((player, idx) => {
+                    if (onCourtPlayers[prefix][player.id] === undefined) {
+                        onCourtPlayers[prefix][player.id] = idx < 5;
+                    }
+                });
+
+                const sortedPlayers = [...activePlayers].sort((a, b) => {
+                    const courtA = onCourtPlayers[prefix][a.id] ? 1 : 0;
+                    const courtB = onCourtPlayers[prefix][b.id] ? 1 : 0;
+                    return courtB - courtA;
+                });
+
+                sortedPlayers.forEach((player) => {
+                    const pId = player.id;
+                    const isOnCourt = onCourtPlayers[prefix][pId];
+                    const isChecked = selectedPlayerContext && selectedPlayerContext.pId === pId ? 'checked' : '';
+                    const rowClass = isOnCourt ? '' : 'player-row-bench';
+                    const courtChecked = isOnCourt ? 'checked' : '';
+                    const currentNote = playerNotes[`${prefix}_${pId}`] || '';
+
+                    rowsHTML += `<tr id="row_${prefix}_${pId}" class="${rowClass}">
+                        <td><strong>${player.jersey}</strong></td>
+                        <td class="player-col" id="name_${prefix}_${pId}">
+                            <input type="radio" name="activePlayerRadio_${prefix}" ${isChecked} onclick="selectPlayerRadio('${prefix}', '${pId}', '${player.name}')">
+                            <label class="oncourt-checkbox-label" title="Tick if 5-man on court">
+                                <input type="checkbox" ${courtChecked} onchange="toggleOnCourt('${prefix}', '${pId}')"> Court
+                            </label>
+                            <input type="text" class="player-note-input" value="${currentNote}" placeholder="Note/Pos" oninput="updatePlayerNote('${prefix}', '${pId}', this.value)">
+                            <span>${player.name}</span>
+                        </td>`;
+
+                    if (currentQuarterFilter === 'ALL') {
+                        let tot2m=0, tot2a=0, tot3m=0, tot3a=0, tot4m=0, tot4a=0, totftm=0, totfta=0;
+                        ['q1', 'q2', 'q3', 'q4', 'ot'].forEach(q => {
+                            tot2m += getStatVal(prefix, pId, `${q}_m2`);
+                            tot2a += getStatVal(prefix, pId, `${q}_a2`);
+                            tot3m += getStatVal(prefix, pId, `${q}_m3`);
+                            tot3a += getStatVal(prefix, pId, `${q}_a3`);
+                            tot4m += getStatVal(prefix, pId, `${q}_m4`);
+                            tot4a += getStatVal(prefix, pId, `${q}_a4`);
+                            totftm += getStatVal(prefix, pId, `${q}_ftm`);
+                            totfta += getStatVal(prefix, pId, `${q}_fta`);
+                        });
+
+                        rowsHTML += `
+                            <td><span class="stat-val" id="val_tot_${prefix}_${pId}_2m">${tot2m}</span></td>
+                            <td><span class="stat-val" id="val_tot_${prefix}_${pId}_3m">${tot3m}</span></td>
+                            <td><span class="stat-val" id="val_tot_${prefix}_${pId}_4m">${tot4m}</span></td>
+                            <td><span class="stat-val" id="val_tot_${prefix}_${pId}_ftm">${totftm}</span></td>
+                            <td>${makeStepper(prefix, pId, 'reb')}</td>
+                            <td>${makeStepper(prefix, pId, 'ast')}</td>
+                            <td>${makeStepper(prefix, pId, 'stl')}</td>
+                            <td>${makeStepper(prefix, pId, 'blk')}</td>
+                            <td>${makeStepper(prefix, pId, 'to')}</td>
+                            <td><span class="stat-val" id="val_tot_${prefix}_${pId}_2a">${tot2a}</span></td>
+                            <td><span class="stat-val" id="val_tot_${prefix}_${pId}_3a">${tot3a}</span></td>
+                            <td><span class="stat-val" id="val_tot_${prefix}_${pId}_4a">${tot4a}</span></td>
+                            <td><span class="stat-val" id="val_tot_${prefix}_${pId}_fta">${totfta}</span></td>
+                        `;
+                    } else {
+                        const qLower = currentQuarterFilter.toLowerCase();
+                        rowsHTML += `
+                            <td>${makeStepper(prefix, pId, `${qLower}_m2`)}</td>
+                            <td>${makeStepper(prefix, pId, `${qLower}_m3`)}</td>
+                            <td>${makeStepper(prefix, pId, `${qLower}_m4`)}</td>
+                            <td>${makeStepper(prefix, pId, `${qLower}_ftm`)}</td>
+                            <td>${makeStepper(prefix, pId, 'reb')}</td>
+                            <td>${makeStepper(prefix, pId, 'ast')}</td>
+                            <td>${makeStepper(prefix, pId, 'stl')}</td>
+                            <td>${makeStepper(prefix, pId, 'blk')}</td>
+                            <td>${makeStepper(prefix, pId, 'to')}</td>
+                            <td>${makeStepper(prefix, pId, `${qLower}_a2`)}</td>
+                            <td>${makeStepper(prefix, pId, `${qLower}_a3`)}</td>
+                            <td>${makeStepper(prefix, pId, `${qLower}_a4`)}</td>
+                            <td>${makeStepper(prefix, pId, `${qLower}_fta`)}</td>
+                        `;
+                    }
+
+                    rowsHTML += `<td class="pts-cell" id="pts_${prefix}_${pId}">0</td></tr>`;
+                });
+            }
+
+            return `
+                <div class="team-header-banner">
+                    <h2>${team.name}</h2>
+                    <div class="team-score-badge" id="teamScore_${prefix}">0 PTS</div>
+                </div>
+                <div class="table-responsive">
+                    <table class="stat-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th class="player-col">PLAYER</th>
+                                ${getHeadersForFilter()}
+                                <th>REB</th><th>AST</th><th>STL</th><th>BLK</th><th>TO</th>
+                                ${getAttemptHeadersForFilter()}
+                                <th>PTS</th>
+                            </tr>
+                        </thead>
+                        <tbody>${rowsHTML}</tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function buildPercentagesTableHTML(teamKey, prefix) {
+            const team = teamsData[teamKey];
+            const activePlayers = team.roster.filter(p => p.active);
+            let rowsHTML = "";
+
+            if (activePlayers.length === 0) {
+                rowsHTML = `<tr><td colspan="17" style="padding:15px; color:var(--text-muted);">No active players selected.</td></tr>`;
+            } else {
+                activePlayers.forEach(player => {
+                    const pId = player.id;
+                    let m2 = 0, a2 = 0, m3 = 0, a3 = 0, m4 = 0, a4 = 0, ftm = 0, fta = 0;
+                    ['q1', 'q2', 'q3', 'q4', 'ot'].forEach(q => {
+                        m2 += getStatVal(prefix, pId, `${q}_m2`);
+                        a2 += getStatVal(prefix, pId, `${q}_a2`);
+                        m3 += getStatVal(prefix, pId, `${q}_m3`);
+                        a3 += getStatVal(prefix, pId, `${q}_a3`);
+                        m4 += getStatVal(prefix, pId, `${q}_m4`);
+                        a4 += getStatVal(prefix, pId, `${q}_a4`);
+                        ftm += getStatVal(prefix, pId, `${q}_ftm`);
+                        fta += getStatVal(prefix, pId, `${q}_fta`);
+                    });
+
+                    const pct2 = a2 > 0 ? Math.round((m2/a2)*100)+'%' : '0%';
+                    const pct3 = a3 > 0 ? Math.round((m3/a3)*100)+'%' : '0%';
+                    const pct4 = a4 > 0 ? Math.round((m4/a4)*100)+'%' : '0%';
+                    const ftpct = fta > 0 ? Math.round((ftm/fta)*100)+'%' : '0%';
+                    const pts = (m2 * 2) + (m3 * 3) + (m4 * 4) + ftm;
+
+                    rowsHTML += `<tr>
+                        <td><strong>${player.jersey}</strong></td>
+                        <td class="player-col">${player.name}</td>
+                        <td>${m2}/${a2}</td><td class="pct-cell">${pct2}</td>
+                        <td>${m3}/${a3}</td><td class="pct-cell">${pct3}</td>
+                        <td>${m4}/${a4}</td><td class="pct-cell">${pct4}</td>
+                        <td>${ftm}/${fta}</td><td class="pct-cell">${ftpct}</td>
+                        <td>${getStatVal(prefix, pId, 'reb')}</td>
+                        <td>${getStatVal(prefix, pId, 'ast')}</td>
+                        <td>${getStatVal(prefix, pId, 'stl')}</td>
+                        <td>${getStatVal(prefix, pId, 'blk')}</td>
+                        <td>${getStatVal(prefix, pId, 'to')}</td>
+                        <td class="pts-cell">${pts}</td>
+                    </tr>`;
+                });
+            }
+
+            return `
+                <div class="team-header-banner">
+                    <h2>${team.name} — OVERALL BOX SCORE</h2>
+                    <div class="team-score-badge" id="teamScore_${prefix}Percentages">0 PTS</div>
+                </div>
+                <div class="table-responsive">
+                    <table class="stat-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th class="player-col">PLAYER</th>
+                                <th>2PT (M/A)</th><th>2FG%</th>
+                                <th>3PT (M/A)</th><th>3FG%</th>
+                                <th>4PT (M/A)</th><th>4FG%</th>
+                                <th>FT (M/A)</th><th>FT%</th>
+                                <th>REB</th><th>AST</th><th>STL</th><th>BLK</th><th>TO</th>
+                                <th>PTS</th>
+                            </tr>
+                        </thead>
+                        <tbody>${rowsHTML}</tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function getHeadersForFilter() {
+            if (currentQuarterFilter === 'ALL') {
+                return `<th>2M</th><th>3M</th><th>4M</th><th>1FTM</th>`;
+            } else {
+                let q = currentQuarterFilter;
+                return `<th>${q} 2M</th><th>${q} 3M</th><th>${q} 4M</th><th>${q} 1FTM</th>`;
+            }
+        }
+
+        function getAttemptHeadersForFilter() {
+            if (currentQuarterFilter === 'ALL') {
+                return `<th>2A</th><th>3A</th><th>4A</th><th>1FTA</th>`;
+            } else {
+                let q = currentQuarterFilter;
+                return `<th>${q} 2A</th><th>${q} 3A</th><th>${q} 4A</th><th>${q} 1FTA</th>`;
+            }
+        }
+
+        function calcTableTotals(prefix) {
+            const homeKey = document.getElementById("homeTeamSelect").value;
+            const awayKey = document.getElementById("awayTeamSelect").value;
+            const teamKey = prefix === 'home' ? homeKey : awayKey;
+            const team = teamsData[teamKey];
+
+            let totalPoints = 0;
+            let qPts = { q1: 0, q2: 0, q3: 0, q4: 0, ot: 0 };
+
+            team.roster.filter(p => p.active).forEach(p => {
+                ['q1', 'q2', 'q3', 'q4', 'ot'].forEach(q => {
+                    let m2 = getStatVal(prefix, p.id, `${q}_m2`);
+                    let m3 = getStatVal(prefix, p.id, `${q}_m3`);
+                    let m4 = getStatVal(prefix, p.id, `${q}_m4`);
+                    let ftm = getStatVal(prefix, p.id, `${q}_ftm`);
+                    let qSum = (m2 * 2) + (m3 * 3) + (m4 * 4) + ftm;
+                    qPts[q] += qSum;
+                    totalPoints += qSum;
+                });
+
+                if (currentQuarterFilter === 'ALL') {
+                    let tot2m=0, tot2a=0, tot3m=0, tot3a=0, tot4m=0, tot4a=0, totftm=0, totfta=0;
+                    ['q1', 'q2', 'q3', 'q4', 'ot'].forEach(q => {
+                        tot2m += getStatVal(prefix, p.id, `${q}_m2`);
+                        tot2a += getStatVal(prefix, p.id, `${q}_a2`);
+                        tot3m += getStatVal(prefix, p.id, `${q}_m3`);
+                        tot3a += getStatVal(prefix, p.id, `${q}_a3`);
+                        tot4m += getStatVal(prefix, p.id, `${q}_m4`);
+                        tot4a += getStatVal(prefix, p.id, `${q}_a4`);
+                        totftm += getStatVal(prefix, p.id, `${q}_ftm`);
+                        totfta += getStatVal(prefix, p.id, `${q}_fta`);
+                    });
+                    const setVal = (id, txt) => {
+                        const el = document.getElementById(id);
+                        if (el) el.textContent = txt;
+                    };
+                    setVal(`val_tot_${prefix}_${p.id}_2m`, `${tot2m}`);
+                    setVal(`val_tot_${prefix}_${p.id}_3m`, `${tot3m}`);
+                    setVal(`val_tot_${prefix}_${p.id}_4m`, `${tot4m}`);
+                    setVal(`val_tot_${prefix}_${p.id}_ftm`, `${totftm}`);
+                    setVal(`val_tot_${prefix}_${p.id}_2a`, `${tot2a}`);
+                    setVal(`val_tot_${prefix}_${p.id}_3a`, `${tot3a}`);
+                    setVal(`val_tot_${prefix}_${p.id}_4a`, `${tot4a}`);
+                    setVal(`val_tot_${prefix}_${p.id}_fta`, `${totfta}`);
+                }
+            });
+
+            if (prefix === 'home') {
+                document.getElementById("homeTeamScoreLabel").textContent = team.name;
+                document.getElementById("homeQ1Pts").textContent = qPts.q1;
+                document.getElementById("homeQ2Pts").textContent = qPts.q2;
+                document.getElementById("homeQ3Pts").textContent = qPts.q3;
+                document.getElementById("homeQ4Pts").textContent = qPts.q4;
+                document.getElementById("homeOtPts").textContent = qPts.ot;
+                document.getElementById("homeTotalPts").textContent = `${totalPoints} PTS`;
+            } else {
+                document.getElementById("awayTeamScoreLabel").textContent = team.name;
+                document.getElementById("awayQ1Pts").textContent = qPts.q1;
+                document.getElementById("awayQ2Pts").textContent = qPts.q2;
+                document.getElementById("awayQ3Pts").textContent = qPts.q3;
+                document.getElementById("awayQ4Pts").textContent = qPts.q4;
+                document.getElementById("awayOtPts").textContent = qPts.ot;
+                document.getElementById("awayTotalPts").textContent = `${totalPoints} PTS`;
+            }
+
+            const scoreEl = document.getElementById(`teamScore_${prefix}`);
+            if (scoreEl) scoreEl.textContent = `${totalPoints} PTS`;
+
+            const scorePctEl = document.getElementById(`teamScore_${prefix}Percentages`);
+            if (scorePctEl) scorePctEl.textContent = `${totalPoints} PTS`;
+
+            updatePrintableBoxScore();
+        }
+
+        function updatePrintableBoxScore() {
+            const homeKey = document.getElementById("homeTeamSelect").value;
+            const awayKey = document.getElementById("awayTeamSelect").value;
+            const homeTeam = teamsData[homeKey];
+            const awayTeam = teamsData[awayKey];
+
+            document.getElementById("printMatchTitle").textContent = `${homeTeam.name} vs ${awayTeam.name} — Official Box Score`;
+            document.getElementById("printHomeBoxScore").innerHTML = buildPercentagesTableHTML(homeKey, "home");
+            document.getElementById("printAwayBoxScore").innerHTML = buildPercentagesTableHTML(awayKey, "away");
+        }
+
+        function renderMatchup() {
+            const homeKey = document.getElementById("homeTeamSelect").value;
+            const awayKey = document.getElementById("awayTeamSelect").value;
+
+            document.getElementById("homeMatchupContainer").innerHTML = buildStatTableHTML(homeKey, "home");
+            document.getElementById("awayMatchupContainer").innerHTML = buildStatTableHTML(awayKey, "away");
+
+            document.getElementById("homePercentagesContainer").innerHTML = buildPercentagesTableHTML(homeKey, "home");
+            document.getElementById("awayPercentagesContainer").innerHTML = buildPercentagesTableHTML(awayKey, "away");
+
+            teamsData[homeKey].roster.filter(p => p.active).forEach(p => updateRowAndTotals('home', p.id));
+            teamsData[awayKey].roster.filter(p => p.active).forEach(p => updateRowAndTotals('away', p.id));
+            saveToLocalStorage();
+        }
+
+        function setQuarterView(mode) {
+            currentQuarterFilter = mode;
+            document.querySelectorAll(".q-btn").forEach(b => b.classList.remove("active"));
+            event.target.classList.add("active");
+            renderMatchup();
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll(".view-panel").forEach(el => el.classList.remove("active"));
+            document.querySelectorAll(".nav-btn").forEach(el => el.classList.remove("active"));
+
+            document.getElementById(tabId).classList.add("active");
+            event.currentTarget.classList.add("active");
+
+            if (tabId === 'percentages-view') {
+                renderMatchup();
+            } else if (tabId === 'leaders-view') {
+                renderTopLeadersTab();
+            } else if (tabId.startsWith('team-')) {
+                const teamKey = tabId.replace('team-', '');
+                renderTeamStatsTab(teamKey);
+            }
+        }
+
+        function exportCSV() {
+            let csv = [];
+            let activeView = document.querySelector(".view-panel.active");
+            let tables = activeView.querySelectorAll("table.stat-table");
+
+            tables.forEach(table => {
+                let rows = table.querySelectorAll("tr");
+                rows.forEach(row => {
+                    let cols = row.querySelectorAll("th, td");
+                    let rowData = [];
+                    cols.forEach(col => {
+                        let valSpan = col.querySelector(".stat-val");
+                        if (valSpan) {
+                            rowData.push(valSpan.textContent.trim());
+                        } else {
+                            rowData.push(`"${col.textContent.trim()}"`);
+                        }
+                    });
+                    csv.push(rowData.join(","));
+                });
+                csv.push("");
+            });
+
+            let csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
+            let downloadLink = document.createElement("a");
+            downloadLink.download = `Congre_Basketball_Match_${new Date().toISOString().slice(0,10)}.csv`;
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+            downloadLink.click();
+        }
+    </script>
+</body>
+</html>
