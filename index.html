@@ -7,7 +7,7 @@
     <style>
         :root {
             --primary-bg: #0b1120;
-            --card-bg: #1e293b;
+            --card-bg: rgba(30, 41, 59, 0.93);
             --accent-gold: #f59e0b;
             --accent-blue: #3b82f6;
             --border-color: #334155;
@@ -15,13 +15,15 @@
             --text-muted: #94a3b8;
             --danger-red: #ef4444;
             --success-green: #22c55e;
-            --table-even: #172033;
-            --header-bg: #0f172a;
+            --table-even: rgba(23, 32, 51, 0.85);
+            --header-bg: rgba(15, 23, 42, 0.95);
+            --bg-overlay-alpha: 0.88;
+            --bg-logo-size: 450px;
         }
 
         body.day-mode {
             --primary-bg: #f1f5f9;
-            --card-bg: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.93);
             --accent-gold: #d97706;
             --accent-blue: #2563eb;
             --border-color: #cbd5e1;
@@ -29,8 +31,9 @@
             --text-muted: #64748b;
             --danger-red: #dc2626;
             --success-green: #16a34a;
-            --table-even: #f8fafc;
-            --header-bg: #e2e8f0;
+            --table-even: rgba(248, 250, 252, 0.85);
+            --header-bg: rgba(226, 232, 240, 0.95);
+            --bg-overlay-alpha: 0.90;
         }
 
         @keyframes yellowFlash {
@@ -52,11 +55,20 @@
         body {
             font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
             background-color: var(--primary-bg);
+            background-image: linear-gradient(rgba(11, 17, 32, var(--bg-overlay-alpha)), rgba(11, 17, 32, var(--bg-overlay-alpha))), url('congre_logo.jpg');
+            background-size: var(--bg-logo-size) auto;
+            background-repeat: repeat;
+            background-position: center;
+            background-attachment: fixed;
             color: var(--text-light);
             padding: 8px;
             font-size: 13px;
             overflow-x: hidden;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color 0.3s ease, color 0.3s ease, background-size 0.3s ease;
+        }
+
+        body.day-mode {
+            background-image: linear-gradient(rgba(241, 245, 249, var(--bg-overlay-alpha)), rgba(241, 245, 249, var(--bg-overlay-alpha))), url('congre_logo.jpg');
         }
 
         /* RESPONSIVE HEADER */
@@ -72,6 +84,7 @@
             margin-bottom: 8px;
             flex-wrap: wrap;
             gap: 8px;
+            backdrop-filter: blur(8px);
         }
 
         .header-logo {
@@ -102,11 +115,18 @@
             margin-top: 1px;
         }
 
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
         .theme-toggle-btn {
             background: var(--card-bg);
             color: var(--accent-gold);
             border: 1.5px solid var(--accent-gold);
-            padding: 6px 12px;
+            padding: 6px 10px;
             border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
@@ -131,6 +151,7 @@
             flex-wrap: wrap;
             gap: 10px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            backdrop-filter: blur(6px);
         }
 
         .team-score-summary {
@@ -181,6 +202,7 @@
             flex-wrap: wrap;
             gap: 8px;
             font-size: 0.8rem;
+            backdrop-filter: blur(6px);
         }
 
         /* NAVIGATION TABS */
@@ -195,6 +217,7 @@
             border: 1px solid var(--border-color);
             margin-bottom: 10px;
             -webkit-overflow-scrolling: touch;
+            backdrop-filter: blur(6px);
         }
 
         .nav-tabs::-webkit-scrollbar {
@@ -260,6 +283,7 @@
             padding: 15px;
             border: 1px solid var(--border-color);
             margin-bottom: 12px;
+            backdrop-filter: blur(6px);
         }
 
         .setup-row {
@@ -381,6 +405,7 @@
             border: 1px solid var(--border-color);
             flex-wrap: wrap;
             gap: 8px;
+            backdrop-filter: blur(6px);
         }
 
         .team-select-box {
@@ -426,6 +451,7 @@
             border: 1px solid var(--border-color);
             overflow-x: auto;
             white-space: nowrap;
+            backdrop-filter: blur(6px);
         }
 
         .quarter-filters-group {
@@ -475,6 +501,7 @@
             border: 1px solid var(--border-color);
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             min-width: 0;
+            backdrop-filter: blur(6px);
         }
 
         .team-header-banner {
@@ -684,6 +711,7 @@
             padding: 12px;
             border: 1px solid var(--border-color);
             margin-bottom: 12px;
+            backdrop-filter: blur(6px);
         }
 
         .roster-header {
@@ -752,6 +780,7 @@
             cursor: pointer;
             font-weight: 700;
             font-size: 0.85rem;
+            backdrop-filter: blur(6px);
         }
 
         .action-btn:active {
@@ -788,7 +817,7 @@
         }
 
         @media print {
-            body { background: #fff !important; color: #000 !important; font-size: 11px !important; }
+            body { background: #fff !important; background-image: none !important; color: #000 !important; font-size: 11px !important; }
             .nav-tabs, .matchup-selector-bar, .quarter-filter-bar, .actions-bar, .step-btns, .hotkey-banner, .theme-toggle-btn, input[type="radio"], input[type="checkbox"], .view-panel { display: none !important; }
             #printBoxScoreContainer { display: block !important; }
             .team-card { background: #fff; border: 1px solid #000; box-shadow: none; margin-bottom: 15px; }
@@ -811,8 +840,10 @@
             <h1>CONGRE MOTIBLOATED PAPAWIS</h1>
             <p>Live Match Stat Tracker</p>
         </div>
-        <div style="display:flex; align-items:center; gap:8px;">
+        <div class="header-controls">
             <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">🌙 Night Mode</button>
+            <button class="theme-toggle-btn" onclick="cycleBgScale()" id="bgScaleBtn" title="Change Background Logo Size">📐 Size: Med</button>
+            <button class="theme-toggle-btn" onclick="cycleBgAlpha()" id="bgAlphaBtn" title="Change Background Transparency Overlay">👁️ Tint: Normal</button>
         </div>
     </header>
 
@@ -883,6 +914,7 @@
                 <label style="color:var(--accent-gold); font-weight:bold;">AWAY TEAM (RIGHT):</label>
                 <select id="awayTeamSelect" onchange="renderMatchup()"></select>
             </div>
+            <button class="action-btn" style="background:var(--accent-gold); color:#000; font-weight:bold; margin-left:auto;" onclick="window.print()">🖨️ Print Box Score</button>
         </div>
 
         <div class="quarter-filter-bar">
@@ -918,7 +950,7 @@
             <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 15px 0;">
 
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom: 10px;">
-                <h4 style="color:var(--text-light); font-size:1.05rem;">📝 Player Roster & Team Assignment</h4>
+                <h4 style="color:var(--text-light); font-size:1.05rem;">📝 Player Roster & Team Assignment (Max 5 active per team)</h4>
                 <button class="add-player-btn" onclick="addNewPlayer()">➕ Add Player</button>
             </div>
 
@@ -961,6 +993,8 @@
         let currentQuarterFilter = 'ALL';
         let selectedPlayerContext = null; 
         let currentTheme = 'night';
+        let bgScaleLevel = 1; 
+        let bgAlphaLevel = 1; 
         let matchArchive = [];
 
         let statsData = {};
@@ -977,7 +1011,9 @@
             { id: "p7", name: "Player 7", jersey: "7", team: "TEAM2" },
             { id: "p8", name: "Player 8", jersey: "8", team: "TEAM2" },
             { id: "p9", name: "Player 9", jersey: "9", team: "TEAM2" },
-            { id: "p10", name: "Player 10", jersey: "10", team: "TEAM2" }
+            { id: "p10", name: "Player 10", jersey: "10", team: "TEAM2" },
+            { id: "p11", name: "Idle Player 1", jersey: "11", team: "IDLE" },
+            { id: "p12", name: "Idle Player 2", jersey: "12", team: "IDLE" }
         ];
 
         let teamsData = {
@@ -1007,7 +1043,38 @@
                 body.classList.remove("day-mode");
                 btn.textContent = "🌙 Night Mode";
             }
+            applyBackgroundStyles();
             saveToLocalStorage();
+        }
+
+        function cycleBgScale() {
+            bgScaleLevel = (bgScaleLevel + 1) % 4;
+            applyBackgroundStyles();
+            saveToLocalStorage();
+        }
+
+        function cycleBgAlpha() {
+            bgAlphaLevel = (bgAlphaLevel + 1) % 3;
+            applyBackgroundStyles();
+            saveToLocalStorage();
+        }
+
+        function applyBackgroundStyles() {
+            const root = document.documentElement;
+            const scaleBtn = document.getElementById("bgScaleBtn");
+            const alphaBtn = document.getElementById("bgAlphaBtn");
+
+            const sizes = [300, 450, 650, 900];
+            const sizeLabels = ["Small", "Med", "Large", "XL"];
+            const currentSize = sizes[bgScaleLevel];
+            root.style.setProperty('--bg-logo-size', currentSize + 'px');
+            if (scaleBtn) scaleBtn.textContent = `📐 Size: ${sizeLabels[bgScaleLevel]}`;
+
+            const alphas = currentTheme === 'day' ? [0.82, 0.90, 0.97] : [0.75, 0.88, 0.96];
+            const alphaLabels = ["Subtle", "Normal", "Solid"];
+            const currentAlpha = alphas[bgAlphaLevel];
+            root.style.setProperty('--bg-overlay-alpha', currentAlpha);
+            if (alphaBtn) alphaBtn.textContent = `👁️ Tint: ${alphaLabels[bgAlphaLevel]}`;
         }
 
         function initOnCourtDefaults() {
@@ -1035,6 +1102,8 @@
                 awayTeam: document.getElementById("awayTeamSelect")?.value,
                 selectedPlayerContext,
                 currentTheme,
+                bgScaleLevel,
+                bgAlphaLevel,
                 registeredPlayers,
                 team1Name: teamsData["TEAM1"].name,
                 team2Name: teamsData["TEAM2"].name
@@ -1066,6 +1135,9 @@
                             document.getElementById("themeToggleBtn").textContent = "☀️ Day Mode";
                         }
                     }
+                    if (parsed.bgScaleLevel !== undefined) bgScaleLevel = parsed.bgScaleLevel;
+                    if (parsed.bgAlphaLevel !== undefined) bgAlphaLevel = parsed.bgAlphaLevel;
+                    applyBackgroundStyles();
                 }
             } catch (e) {
                 console.error("Error loading autosave state:", e);
@@ -1128,6 +1200,10 @@
                             <input type="radio" name="team_assign_${player.id}" value="TEAM2" ${player.team === 'TEAM2' ? 'checked' : ''} onchange="updateRegistrationPlayer('${player.id}', 'team', 'TEAM2')">
                             ${teamsData["TEAM2"].name}
                         </label>
+                        <label style="color:var(--text-muted);">
+                            <input type="radio" name="team_assign_${player.id}" value="IDLE" ${player.team === 'IDLE' ? 'checked' : ''} onchange="updateRegistrationPlayer('${player.id}', 'team', 'IDLE')">
+                            Idle
+                        </label>
                     </div>
                     <button class="remove-player-btn" onclick="removePlayer('${player.id}')" title="Remove Player">✕</button>
                 `;
@@ -1141,7 +1217,7 @@
                 id: newId,
                 name: `Player ${registeredPlayers.length + 1}`,
                 jersey: `${registeredPlayers.length + 1}`,
-                team: "TEAM1"
+                team: "IDLE"
             });
             rebuildTeamRosters();
             renderRegistrationPanel();
@@ -1162,6 +1238,14 @@
         function updateRegistrationPlayer(pId, field, value) {
             const player = registeredPlayers.find(p => p.id === pId);
             if (player) {
+                if (field === 'team' && value !== 'IDLE') {
+                    const currentTeamCount = registeredPlayers.filter(p => p.team === value && p.id !== pId).length;
+                    if (currentTeamCount >= 5) {
+                        alert("Each team can only accommodate a maximum of 5 active players per game!");
+                        renderRegistrationPanel();
+                        return;
+                    }
+                }
                 player[field] = value;
                 rebuildTeamRosters();
                 renderTeamViews();
@@ -1349,7 +1433,7 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(matchArchive, null, 2));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `Congre_Basketball_MatchArchive_${new Date().toISOString().slice(0,10)}.json`);
+            downloadAnchor.setAttribute("download", `Congre_Motibloated_Papawis_MatchArchive_${new Date().toISOString().slice(0,10)}.json`);
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
@@ -1440,7 +1524,7 @@
                         <div class="roster-header">
                             <h3 style="color:var(--accent-gold);">Roster Management</h3>
                         </div>
-                        <div class="roster-list">${rosterItemsHTML || '<p style="color:var(--text-muted);">No players assigned to this team yet. Go to Player Registration to add players.</p>'}</div>
+                        <div class="roster-list">${rosterItemsHTML || '<p style="color:var(--text-muted);">No active players assigned to this team. Assign players in the registration tab.</p>'}</div>
                     </div>
                 `;
                 container.appendChild(viewDiv);
@@ -1726,7 +1810,7 @@
             if (!onCourtPlayers[prefix]) onCourtPlayers[prefix] = {};
 
             if (activePlayers.length === 0) {
-                rowsHTML = `<tr><td colspan="25" style="padding:15px; color:var(--text-muted);">No active players selected. Enable or add players in registration.</td></tr>`;
+                rowsHTML = `<tr><td colspan="25" style="padding:15px; color:var(--text-muted);">No active players selected. Enable or assign players in registration.</td></tr>`;
             } else {
                 activePlayers.forEach((player, idx) => {
                     if (onCourtPlayers[prefix][player.id] === undefined) {
