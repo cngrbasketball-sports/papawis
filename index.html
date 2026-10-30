@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Congre Basketball Olympics Season 2 - Live Stat Sheet</title>
+    <title>Congre Motibloated Papawis - Live Stat Sheet</title>
     <style>
         :root {
             --primary-bg: #0b1120;
@@ -72,6 +72,15 @@
             margin-bottom: 8px;
             flex-wrap: wrap;
             gap: 8px;
+        }
+
+        .header-logo {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid var(--accent-gold);
+            background-color: #000;
         }
 
         .header-title-container {
@@ -244,7 +253,7 @@
             display: block;
         }
 
-        /* SETUP TEAM PANEL */
+        /* REGISTRATION CARD & STYLES */
         .setup-container {
             background: var(--card-bg);
             border-radius: 10px;
@@ -256,7 +265,7 @@
         .setup-row {
             display: flex;
             gap: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             flex-wrap: wrap;
             align-items: center;
         }
@@ -264,10 +273,10 @@
         .setup-row label {
             color: var(--accent-gold);
             font-weight: bold;
-            min-width: 140px;
+            min-width: 130px;
         }
 
-        .setup-row input, .setup-row select {
+        .setup-row input {
             background: var(--header-bg);
             color: var(--text-light);
             border: 1.5px solid var(--border-color);
@@ -276,6 +285,88 @@
             font-size: 0.9rem;
             flex: 1;
             min-width: 180px;
+        }
+
+        .add-player-btn {
+            background: var(--success-green);
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 15px;
+        }
+
+        .add-player-btn:hover {
+            opacity: 0.9;
+        }
+
+        .player-inputs-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .player-input-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--header-bg);
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+
+        .player-input-row input[type="text"] {
+            background: var(--card-bg);
+            color: var(--text-light);
+            border: 1px solid var(--border-color);
+            padding: 5px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        .team-select-radios {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            margin-left: auto;
+        }
+
+        .team-select-radios label {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+
+        .team-select-radios input[type="radio"] {
+            accent-color: var(--accent-gold);
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
+        }
+
+        .remove-player-btn {
+            background: var(--danger-red);
+            color: #fff;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* MATCHUP CONTROLS */
@@ -629,15 +720,6 @@
             border-color: var(--danger-red);
         }
 
-        .roster-item input[type="text"] {
-            background: var(--card-bg);
-            color: var(--text-light);
-            border: 1px solid var(--border-color);
-            padding: 3px 6px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-        }
-
         .playing-toggle {
             display: flex;
             align-items: center;
@@ -724,9 +806,10 @@
 <body id="appBody">
 
     <header class="app-header">
+        <img src="congre_logo.jpg" class="header-logo" onerror="this.src='https://via.placeholder.com/65/0f172a/f59e0b?text=CBL'">
         <div class="header-title-container">
-            <h1>Congre Basketball Olympics</h1>
-            <p>Season 2 — Live Match Stat Tracker</p>
+            <h1>CONGRE MOTIBLOATED PAPAWIS</h1>
+            <p>Live Match Stat Tracker</p>
         </div>
         <div style="display:flex; align-items:center; gap:8px;">
             <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">🌙 Night Mode</button>
@@ -770,6 +853,7 @@
 
     <nav class="nav-tabs" id="mainNavTabs">
         <button class="nav-btn matchup-btn active" onclick="switchTab('matchup-view')">⚡ LIVE MATCH-UP VIEW</button>
+        <button class="nav-btn" onclick="switchTab('registration-view')">📝 PLAYER REGISTRATION & TEAMS</button>
         <button class="nav-btn" onclick="switchTab('percentages-view')">📊 OVERALL PERCENTAGES & BOX SCORE</button>
         <button class="nav-btn" onclick="switchTab('leaders-view')">🏆 TOP 5 LEADERS</button>
         <button class="nav-btn" onclick="switchTab('team-TEAM1')" id="tabNavTeam1">Team 1</button>
@@ -789,23 +873,6 @@
 
     <!-- LIVE MATCHUP VIEW (SIDE BY SIDE) -->
     <div id="matchup-view" class="view-panel active">
-        <!-- MANUAL SETUP CONFIGURATION -->
-        <div class="setup-container">
-            <h3 style="color:var(--accent-gold); margin-bottom: 10px;">⚙️ Manual Team & Roster Configuration</h3>
-            <div class="setup-row">
-                <label>Home Team Name:</label>
-                <input type="text" id="homeTeamNameInput" value="Team 1" oninput="updateTeamConfigs()">
-                <label>Number of Players:</label>
-                <input type="number" id="homePlayerCountInput" value="10" min="1" max="25" onchange="generateRosterInputs('home')">
-            </div>
-            <div class="setup-row">
-                <label>Away Team Name:</label>
-                <input type="text" id="awayTeamNameInput" value="Team 2" oninput="updateTeamConfigs()">
-                <label>Number of Players:</label>
-                <input type="number" id="awayPlayerCountInput" value="10" min="1" max="25" onchange="generateRosterInputs('away')">
-            </div>
-        </div>
-
         <div class="matchup-selector-bar">
             <div class="team-select-box">
                 <label style="color:var(--accent-gold); font-weight:bold;">HOME TEAM (LEFT):</label>
@@ -837,6 +904,28 @@
         </div>
     </div>
 
+    <!-- SEPARATE TAB: PLAYER REGISTRATION & TEAMS -->
+    <div id="registration-view" class="view-panel">
+        <div class="setup-container">
+            <h3 style="color:var(--accent-gold); margin-bottom: 12px;">⚙️ Custom Team Names & Player Registration</h3>
+            <div class="setup-row">
+                <label>Team 1 Name:</label>
+                <input type="text" id="homeTeamNameInput" value="Team 1" oninput="updateTeamNames()">
+                <label>Team 2 Name:</label>
+                <input type="text" id="awayTeamNameInput" value="Team 2" oninput="updateTeamNames()">
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 15px 0;">
+
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom: 10px;">
+                <h4 style="color:var(--text-light); font-size:1.05rem;">📝 Player Roster & Team Assignment</h4>
+                <button class="add-player-btn" onclick="addNewPlayer()">➕ Add Player</button>
+            </div>
+
+            <div id="playerRegistrationList" class="player-inputs-grid"></div>
+        </div>
+    </div>
+
     <!-- OVERALL PERCENTAGES & COMBINED BOX SCORE VIEW -->
     <div id="percentages-view" class="view-panel">
         <div class="matchup-grid-vertical">
@@ -861,7 +950,7 @@
     <!-- PRINTABLE BOX SCORE CONTAINER (VISIBLE ONLY DURING PRINTING) -->
     <div id="printBoxScoreContainer">
         <div style="text-align: center; margin-bottom: 15px;">
-            <h2 style="font-size: 1.4rem; text-transform: uppercase;">Congre Basketball Olympics Season 2</h2>
+            <h2 style="font-size: 1.4rem; text-transform: uppercase;">Congre Motibloated Papawis</h2>
             <p style="font-size: 0.9rem; font-weight: bold; margin-top: 3px;" id="printMatchTitle">Official Box Score</p>
         </div>
         <div id="printHomeBoxScore" style="margin-bottom: 15px;"></div>
@@ -878,21 +967,30 @@
         let onCourtPlayers = { home: {}, away: {} }; 
         let playerNotes = {}; 
 
+        let registeredPlayers = [
+            { id: "p1", name: "Player 1", jersey: "1", team: "TEAM1" },
+            { id: "p2", name: "Player 2", jersey: "2", team: "TEAM1" },
+            { id: "p3", name: "Player 3", jersey: "3", team: "TEAM1" },
+            { id: "p4", name: "Player 4", jersey: "4", team: "TEAM1" },
+            { id: "p5", name: "Player 5", jersey: "5", team: "TEAM1" },
+            { id: "p6", name: "Player 6", jersey: "6", team: "TEAM2" },
+            { id: "p7", name: "Player 7", jersey: "7", team: "TEAM2" },
+            { id: "p8", name: "Player 8", jersey: "8", team: "TEAM2" },
+            { id: "p9", name: "Player 9", jersey: "9", team: "TEAM2" },
+            { id: "p10", name: "Player 10", jersey: "10", team: "TEAM2" }
+        ];
+
         let teamsData = {
-            "TEAM1": {
-                name: "Team 1",
-                roster: Array.from({length: 10}, (_, i) => ({id: `t1_p${i+1}`, jersey: i+1, name: `Player ${i+1}`, active: true}))
-            },
-            "TEAM2": {
-                name: "Team 2",
-                roster: Array.from({length: 10}, (_, i) => ({id: `t2_p${i+1}`, jersey: i+1, name: `Player ${i+1}`, active: true}))
-            }
+            "TEAM1": { name: "Team 1", roster: [] },
+            "TEAM2": { name: "Team 2", roster: [] }
         };
 
         document.addEventListener("DOMContentLoaded", () => {
             loadFromLocalStorage();
+            rebuildTeamRosters();
             populateSelects();
             initOnCourtDefaults();
+            renderRegistrationPanel();
             renderTeamViews();
             renderMatchup();
             setupKeyboardHotkeys();
@@ -937,7 +1035,9 @@
                 awayTeam: document.getElementById("awayTeamSelect")?.value,
                 selectedPlayerContext,
                 currentTheme,
-                teamsData
+                registeredPlayers,
+                team1Name: teamsData["TEAM1"].name,
+                team2Name: teamsData["TEAM2"].name
             };
             localStorage.setItem("cbl_statkeeper_state", JSON.stringify(state));
         }
@@ -951,7 +1051,13 @@
                     if (parsed.matchArchive) matchArchive = parsed.matchArchive;
                     if (parsed.onCourtPlayers) Object.assign(onCourtPlayers, parsed.onCourtPlayers);
                     if (parsed.playerNotes) Object.assign(playerNotes, parsed.playerNotes);
-                    if (parsed.teamsData) teamsData = parsed.teamsData;
+                    if (parsed.registeredPlayers) registeredPlayers = parsed.registeredPlayers;
+                    if (parsed.team1Name) teamsData["TEAM1"].name = parsed.team1Name;
+                    if (parsed.team2Name) teamsData["TEAM2"].name = parsed.team2Name;
+                    
+                    document.getElementById("homeTeamNameInput").value = teamsData["TEAM1"].name;
+                    document.getElementById("awayTeamNameInput").value = teamsData["TEAM2"].name;
+
                     if (parsed.selectedPlayerContext) selectedPlayerContext = parsed.selectedPlayerContext;
                     if (parsed.currentTheme) {
                         currentTheme = parsed.currentTheme;
@@ -966,7 +1072,26 @@
             }
         }
 
-        function updateTeamConfigs() {
+        function rebuildTeamRosters() {
+            teamsData["TEAM1"].roster = [];
+            teamsData["TEAM2"].roster = [];
+
+            registeredPlayers.forEach(p => {
+                const playerObj = {
+                    id: p.id,
+                    jersey: p.jersey || "0",
+                    name: p.name || "Unnamed",
+                    active: true
+                };
+                if (p.team === "TEAM1") {
+                    teamsData["TEAM1"].roster.push(playerObj);
+                } else if (p.team === "TEAM2") {
+                    teamsData["TEAM2"].roster.push(playerObj);
+                }
+            });
+        }
+
+        function updateTeamNames() {
             const t1Name = document.getElementById("homeTeamNameInput").value || "Team 1";
             const t2Name = document.getElementById("awayTeamNameInput").value || "Team 2";
             
@@ -977,37 +1102,69 @@
             document.getElementById("tabNavTeam2").textContent = t2Name;
 
             populateSelects();
+            renderRegistrationPanel();
             renderTeamViews();
             renderMatchup();
             saveToLocalStorage();
         }
 
-        function generateRosterInputs(prefix) {
-            const key = prefix === 'home' ? 'TEAM1' : 'TEAM2';
-            const countInput = document.getElementById(prefix + 'PlayerCountInput');
-            const count = parseInt(countInput.value) || 1;
+        function renderRegistrationPanel() {
+            const container = document.getElementById("playerRegistrationList");
+            container.innerHTML = "";
 
-            let currentRoster = teamsData[key].roster;
-            let newRoster = [];
+            registeredPlayers.forEach((player, idx) => {
+                const row = document.createElement("div");
+                row.className = "player-input-row";
+                row.innerHTML = `
+                    <span style="color:var(--accent-gold); font-weight:bold; width:25px;">#${idx+1}</span>
+                    <input type="text" value="${player.jersey}" placeholder="No." style="width:50px; text-align:center;" oninput="updateRegistrationPlayer('${player.id}', 'jersey', this.value)">
+                    <input type="text" value="${player.name}" placeholder="Player Full Name" style="flex:1; min-width:150px;" oninput="updateRegistrationPlayer('${player.id}', 'name', this.value)">
+                    <div class="team-select-radios">
+                        <label>
+                            <input type="radio" name="team_assign_${player.id}" value="TEAM1" ${player.team === 'TEAM1' ? 'checked' : ''} onchange="updateRegistrationPlayer('${player.id}', 'team', 'TEAM1')">
+                            ${teamsData["TEAM1"].name}
+                        </label>
+                        <label>
+                            <input type="radio" name="team_assign_${player.id}" value="TEAM2" ${player.team === 'TEAM2' ? 'checked' : ''} onchange="updateRegistrationPlayer('${player.id}', 'team', 'TEAM2')">
+                            ${teamsData["TEAM2"].name}
+                        </label>
+                    </div>
+                    <button class="remove-player-btn" onclick="removePlayer('${player.id}')" title="Remove Player">✕</button>
+                `;
+                container.appendChild(row);
+            });
+        }
 
-            for (let i = 0; i < count; i++) {
-                if (currentRoster[i]) {
-                    newRoster.push(currentRoster[i]);
-                } else {
-                    newRoster.push({id: `${key.toLowerCase()}_p${i+1}`, jersey: i+1, name: `Player ${i+1}`, active: true});
-                }
-            }
-            teamsData[key].roster = newRoster;
+        function addNewPlayer() {
+            const newId = "p_" + Date.now();
+            registeredPlayers.push({
+                id: newId,
+                name: `Player ${registeredPlayers.length + 1}`,
+                jersey: `${registeredPlayers.length + 1}`,
+                team: "TEAM1"
+            });
+            rebuildTeamRosters();
+            renderRegistrationPanel();
             renderTeamViews();
             renderMatchup();
             saveToLocalStorage();
         }
 
-        function updatePlayerDetail(teamKey, pId, field, value) {
-            let player = teamsData[teamKey].roster.find(p => p.id === pId);
+        function removePlayer(pId) {
+            registeredPlayers = registeredPlayers.filter(p => p.id !== pId);
+            rebuildTeamRosters();
+            renderRegistrationPanel();
+            renderTeamViews();
+            renderMatchup();
+            saveToLocalStorage();
+        }
+
+        function updateRegistrationPlayer(pId, field, value) {
+            const player = registeredPlayers.find(p => p.id === pId);
             if (player) {
-                if (field === 'name') player.name = value;
-                if (field === 'jersey') player.jersey = value;
+                player[field] = value;
+                rebuildTeamRosters();
+                renderTeamViews();
                 renderMatchup();
                 saveToLocalStorage();
             }
@@ -1251,8 +1408,8 @@
                     rosterItemsHTML += `
                         <div class="roster-item ${player.active ? '' : 'inactive'}">
                             <div style="display:flex; align-items:center; gap:6px; flex:1;">
-                                <input type="text" value="${player.jersey}" style="width:40px; text-align:center;" oninput="updatePlayerDetail('${teamKey}', '${player.id}', 'jersey', this.value)" placeholder="No.">
-                                <input type="text" value="${player.name}" style="flex:1;" oninput="updatePlayerDetail('${teamKey}', '${player.id}', 'name', this.value)" placeholder="Player Name">
+                                <strong style="color:var(--accent-gold);">#${player.jersey}</strong>
+                                <span>${player.name}</span>
                             </div>
                             <label class="playing-toggle">
                                 <input type="checkbox" ${player.active ? 'checked' : ''} onchange="togglePlayerActive('${teamKey}', '${player.id}')">
@@ -1283,7 +1440,7 @@
                         <div class="roster-header">
                             <h3 style="color:var(--accent-gold);">Roster Management</h3>
                         </div>
-                        <div class="roster-list">${rosterItemsHTML}</div>
+                        <div class="roster-list">${rosterItemsHTML || '<p style="color:var(--text-muted);">No players assigned to this team yet. Go to Player Registration to add players.</p>'}</div>
                     </div>
                 `;
                 container.appendChild(viewDiv);
@@ -1385,7 +1542,7 @@
                                 <th>PTS</th>
                             </tr>
                         </thead>
-                        <tbody>${rowsHTML}</tbody>
+                        <tbody>${rowsHTML || '<tr><td colspan="17">No players on this roster</td></tr>'}</tbody>
                         <tfoot>
                             <tr style="background:var(--header-bg); color:var(--accent-gold);">
                                 <td colspan="2" class="player-col">TEAM TOTALS</td>
@@ -1569,7 +1726,7 @@
             if (!onCourtPlayers[prefix]) onCourtPlayers[prefix] = {};
 
             if (activePlayers.length === 0) {
-                rowsHTML = `<tr><td colspan="25" style="padding:15px; color:var(--text-muted);">No active players selected. Enable players in roster view.</td></tr>`;
+                rowsHTML = `<tr><td colspan="25" style="padding:15px; color:var(--text-muted);">No active players selected. Enable or add players in registration.</td></tr>`;
             } else {
                 activePlayers.forEach((player, idx) => {
                     if (onCourtPlayers[prefix][player.id] === undefined) {
@@ -1913,7 +2070,7 @@
 
             let csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
             let downloadLink = document.createElement("a");
-            downloadLink.download = `Congre_Basketball_Match_${new Date().toISOString().slice(0,10)}.csv`;
+            downloadLink.download = `Congre_Motibloated_Papawis_Match_${new Date().toISOString().slice(0,10)}.csv`;
             downloadLink.href = window.URL.createObjectURL(csvFile);
             downloadLink.click();
         }
